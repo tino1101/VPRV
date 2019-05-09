@@ -1,5 +1,6 @@
 package com.tino.vprv;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +20,7 @@ import java.util.List;
 
 import static android.view.View.VISIBLE;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private CustomViewPager viewPager;
     private LinearLayout points;
@@ -32,20 +33,28 @@ public class MainActivity extends AppCompatActivity {
     private List<RVAdapter> appAdapters = new ArrayList<>();
     private CustomViewPagerAdapter viewPagerAdapter;
 
+    private ArrayList<DataModel> dataList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         viewPager = findViewById(R.id.viewpager);
+        viewPager.setOffscreenPageLimit(1);
         points = findViewById(R.id.points);
+        findViewById(R.id.add).setOnClickListener(this);
+        findViewById(R.id.update).setOnClickListener(this);
+        findViewById(R.id.delete).setOnClickListener(this);
+        findViewById(R.id.jump).setOnClickListener(this);
 
-        ArrayList<DataModel> list = new ArrayList<>();
+        dataList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             DataModel dataModel = new DataModel();
             dataModel.id = i;
             dataModel.name = "第" + i + "项";
+            dataList.add(dataModel);
         }
-        initData(list);
+        initData(dataList);
     }
 
 
@@ -115,5 +124,47 @@ public class MainActivity extends AppCompatActivity {
     private int dip2px(float dipValue) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add:
+                for (int i = 10; i < 15; i++) {
+                    DataModel dataModel = new DataModel();
+                    dataModel.id = i;
+                    dataModel.name = "第" + i + "项";
+                    dataList.add(dataModel);
+                }
+                initData(dataList);
+                break;
+            case R.id.update:
+                if (dataList.size() > 1) {
+                    DataModel dataModel1 = dataList.get(1);
+                    dataModel1.name = "第111项目";
+                    dataList.set(1, dataModel1);
+                }
+                if (dataList.size() > 9) {
+                    DataModel dataModel9 = dataList.get(9);
+                    dataModel9.name = "第999项目";
+                    dataList.set(9, dataModel9);
+                }
+                initData(dataList);
+                break;
+            case R.id.delete:
+                int len = dataList.size();
+                int deleteIndex = 6;
+                if (len > deleteIndex) {
+                    for (int i = deleteIndex; i < len; i++) {
+                        dataList.remove(deleteIndex);
+                    }
+                    initData(dataList);
+                }
+                break;
+            case R.id.jump:
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

@@ -17,7 +17,8 @@ public class CustomViewPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView(mViewList.get(position));
+//        container.removeView(mViewList.get(position));
+        container.removeView((View) object);
     }
 
     @Override
