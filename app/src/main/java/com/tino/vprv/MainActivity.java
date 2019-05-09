@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ArrayList<DataModel> dataList;
 
+    private ArrayList<DataModel> mDataList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,11 +56,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             dataModel.name = "第" + i + "项";
             dataList.add(dataModel);
         }
-        initData(dataList);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (dataList == null) return;
+        if (mDataList == null || mDataList.size() != dataList.size()) {
+            initData(dataList);
+        } else {
+            for (int i = 0; i < mDataList.size(); i++) {
+                if (!mDataList.get(i).equals(dataList.get(i))) {
+                    initData(dataList);
+                    break;
+                }
+            }
+        }
+    }
 
     private void initData(final ArrayList<DataModel> list) {
+        mDataList = list;
         viewList.clear();
         appAdapters.clear();
         points.removeAllViews();
